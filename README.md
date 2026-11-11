@@ -22,14 +22,14 @@ Ou cliquer sur le bouton :
 
 ```yaml
 type: custom:solaredge-card
-solar_power: sensor.hautier_pascal_sso_meter_solar_power
-grid_power: sensor.hautier_pascal_sso_meter_grid_power
-consumption: sensor.hautier_pascal_sso_meter_consumption
+solar_power: sensor.XXXX_sso_meter_solar_power
+grid_power: sensor.XXXX_sso_meter_grid_power
+consumption: sensor.XXXX_sso_meter_consumption
 # Options
 ev_power: sensor.voldt_puissance
 ev_switch: switch.voldt_recharge
-ev_battery: sensor.garage_a390gt_batterie
-ev_name: A390 GT
+ev_battery: sensor.garage_YYYY_batterie
+ev_name: YYYY
 ```
 
 ## Paramètres
