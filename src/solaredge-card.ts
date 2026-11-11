@@ -28,6 +28,14 @@ export class SolarEdgeCard extends LitElement {
     }
   `;
 
+  static getConfigElement(): HTMLElement {
+    return document.createElement('solaredge-card-editor');
+  }
+
+  static getStubConfig(): SolarEdgeCardConfig {
+    return { type: 'custom:solaredge-card', solar_power: '', grid_power: '', consumption: '' };
+  }
+
   setConfig(config: SolarEdgeCardConfig) {
     if (!config.solar_power) throw new Error('solar_power est requis');
     if (!config.grid_power) throw new Error('grid_power est requis');

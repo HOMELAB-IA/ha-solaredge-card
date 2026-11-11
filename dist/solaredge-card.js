@@ -107,6 +107,12 @@ function computeEvText(name, kw, bat) {
 }
 
 class SolarEdgeCard extends i {
+    static getConfigElement() {
+        return document.createElement('solaredge-card-editor');
+    }
+    static getStubConfig() {
+        return { type: 'custom:solaredge-card', solar_power: '', grid_power: '', consumption: '' };
+    }
     setConfig(config) {
         if (!config.solar_power)
             throw new Error('solar_power est requis');
@@ -479,6 +485,69 @@ __decorate([
 __decorate([
     r()
 ], SolarEdgeCard.prototype, "_config", void 0);
+
+const SCHEMA = [
+    { name: 'solar_power', selector: { entity: { domain: 'sensor' } } },
+    { name: 'grid_power', selector: { entity: { domain: 'sensor' } } },
+    { name: 'consumption', selector: { entity: { domain: 'sensor' } } },
+    { name: 'ev_power', selector: { entity: { domain: 'sensor' } } },
+    { name: 'ev_switch', selector: { entity: { domain: 'switch' } } },
+    { name: 'ev_battery', selector: { entity: { domain: 'sensor' } } },
+    { name: 'ev_name', selector: { text: {} } },
+    { name: 'connectivity', selector: { entity: { domain: 'binary_sensor' } } },
+    { name: 'alerts', selector: { entity: { domain: 'sensor' } } },
+];
+const LABELS = {
+    solar_power: 'Production solaire (W/kW) ✱',
+    grid_power: 'Puissance réseau (W/kW, >0 import, <0 export) ✱',
+    consumption: 'Consommation totale (W/kW) ✱',
+    ev_power: 'Puissance de charge VE',
+    ev_switch: 'Switch borne de charge',
+    ev_battery: 'Niveau batterie VE (%)',
+    ev_name: 'Nom du véhicule (affiché dans le badge)',
+    connectivity: 'Connectivité onduleur (binary_sensor)',
+    alerts: "Nombre d'alertes onduleur",
+};
+const HELPERS = {
+    solar_power: 'Capteur en Watt ou kWatt (ex: sensor.solar_power).',
+    grid_power: 'Valeur positive = import depuis le réseau, négative = export.',
+    consumption: 'Consommation totale de la maison (hors VE inclus si déjà dedans).',
+};
+class SolarEdgeCardEditor extends i {
+    setConfig(config) {
+        this._config = config;
+    }
+    render() {
+        if (!this._config)
+            return A;
+        return b `
+      <ha-form
+        .hass=${this.hass}
+        .data=${this._config}
+        .schema=${SCHEMA}
+        .computeLabel=${(s) => LABELS[s.name] ?? s.name}
+        .computeHelper=${(s) => HELPERS[s.name] ?? ''}
+        @value-changed=${this._valueChanged}
+      ></ha-form>
+    `;
+    }
+    _valueChanged(ev) {
+        this.dispatchEvent(new CustomEvent('config-changed', {
+            detail: { config: ev.detail.value },
+            bubbles: true,
+            composed: true,
+        }));
+    }
+}
+__decorate([
+    n({ attribute: false })
+], SolarEdgeCardEditor.prototype, "hass", void 0);
+__decorate([
+    r()
+], SolarEdgeCardEditor.prototype, "_config", void 0);
+if (typeof customElements !== 'undefined') {
+    customElements.define('solaredge-card-editor', SolarEdgeCardEditor);
+}
 
 if (typeof customElements !== 'undefined') {
     customElements.define('solaredge-card', SolarEdgeCard);
